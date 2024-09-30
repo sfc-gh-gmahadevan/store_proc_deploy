@@ -30,21 +30,12 @@ jobs:
 
       # - name: Install Python packages
       #   run: pip install -r requirements.txt
-      
-      # - name: Deploy data pipeline
-      #   env:
-      #     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-      #     SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-      #     SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-      #     SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-      #     SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE}}
-      #     SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_WAREHOUSE}}
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           pip install snowflake-cli-labs    
-          snow git fetch GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO --temporary-connection
+          snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
           # snow snowpark build
           # snow snowpark deploy --replace
         env: 
@@ -53,3 +44,5 @@ jobs:
           SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
           SNOWFLAKE_ROLE:      ${{ secrets.SNOWFLAKE_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE:  ${{ secrets.SNOWFLAKE_DATABASE}}
+          
