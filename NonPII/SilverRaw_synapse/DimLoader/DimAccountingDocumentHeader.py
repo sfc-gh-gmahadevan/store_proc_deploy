@@ -11,7 +11,7 @@
 # COMMAND ----------
 
 def main() -> str:
-    return "DimAccountingDocumentHeader" 
+    return "DimAccountingDocumentHeader update" 
 
 # dbutils.widgets.text("pipelineID", "", "pipelineID")
 # dbutils.widgets.text("jobID", "", "jobID")
