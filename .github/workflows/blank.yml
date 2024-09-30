@@ -38,6 +38,7 @@ jobs:
 
           # snow snowpark build
           echo $GITHUB_WORKSPACE
+          echo $SNOWFLAKE_ACCOUNT
         env: 
           SNOWFLAKE_ACCOUNT:   ${{ secrets.ACCOUNT }}
           SNOWFLAKE_USER:      ${{ secrets.USER }}
