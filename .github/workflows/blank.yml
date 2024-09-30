@@ -1,0 +1,47 @@
+# This is a basic workflow to help you get started with Actions
+
+name: DEPLOY_STORED_PROC
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # - name: Install Python packages
+      #   run: pip install -r requirements.txt
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          pip install snowflake-cli-labs    
+
+          # snow snowpark build
+          echo $GITHUB_WORKSPACE
+        env: 
+          SNOWFLAKE_ACCOUNT:   ${{ secrets.ACCOUNT }}
+          SNOWFLAKE_USER:      ${{ secrets.USER }}
+          SNOWFLAKE_PASSWORD:  ${{ secrets.PASSWORD }}
+          SNOWFLAKE_DATABASE:  ${{ secrets.DATABASE }}
+          SNOWFLAKE_ROLE:      ${{ secrets.ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.WAREHOUSE }}
