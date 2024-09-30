@@ -35,7 +35,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           pip install snowflake-cli-labs    
-          snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
+          snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO --temporary-connection
           # snow snowpark build
           # snow snowpark deploy --replace
         env: 
