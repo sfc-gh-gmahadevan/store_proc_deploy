@@ -30,6 +30,15 @@ jobs:
 
       # - name: Install Python packages
       #   run: pip install -r requirements.txt
+      
+      # - name: Deploy data pipeline
+      #   env:
+      #     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      #     SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      #     SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      #     SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      #     SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE}}
+      #     SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_WAREHOUSE}}
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
@@ -39,9 +48,9 @@ jobs:
           # snow snowpark build
           # snow snowpark deploy --replace
         env: 
-          SNOWFLAKE_ACCOUNT:   ${{ secrets.ACCOUNT }}
-          SNOWFLAKE_USER:      ${{ secrets.USER }}
-          SNOWFLAKE_PASSWORD:  ${{ secrets.PASSWORD }}
-          SNOWFLAKE_DATABASE:  ${{ secrets.DATABASE }}
-          SNOWFLAKE_ROLE:      ${{ secrets.ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.WAREHOUSE }}
+          SNOWFLAKE_ACCOUNT:   ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:      ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_DATABASE:  ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_ROLE:      ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
