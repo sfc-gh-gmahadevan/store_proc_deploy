@@ -48,7 +48,7 @@ jobs:
         run: |
           # pip install snowflake-cli-labs
           snow --version
-          snow connection migration
+          snow connection test migration
           # snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO --temporary-connection --account $SNOWFLAKE_ACCOUNT --user $SNOWFLAKE_USER --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE
           # snow snowpark build
           # snow snowpark deploy --replace
