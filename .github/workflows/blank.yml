@@ -30,6 +30,10 @@ jobs:
 
       # - name: Install Python packages
       #   run: pip install -r requirements.txt
+      - uses: Snowflake-Labs/snowflake-cli-action@v1
+        with:
+          cli-version: "latest"
+          default-config-file-path: "config.toml"
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
@@ -42,9 +46,9 @@ jobs:
           SNOWFLAKE_REGION: ${{ secrets.SNOWFLAKE_REGION }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
         run: |
-          pip install snowflake-cli-labs
+          # pip install snowflake-cli-labs
           snow --version
-          snow connection test --temporary-connection
+          snow connection migration
           # snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO --temporary-connection --account $SNOWFLAKE_ACCOUNT --user $SNOWFLAKE_USER --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE
           # snow snowpark build
           # snow snowpark deploy --replace
