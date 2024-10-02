@@ -56,6 +56,7 @@ jobs:
           echo "variable from shell environment : $env_var"
           snow --version
           # snow connection test -c myconnection
+          # snow 
           # snow sql -q "ALTER GIT REPOSITORY GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO FETCH"
           # snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
           python deploy_snowpark_apps.py $GITHUB_WORKSPACE
