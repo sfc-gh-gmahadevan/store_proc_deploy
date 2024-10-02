@@ -17,3 +17,13 @@ CREATE OR REPLACE PROCEDURE <% DB_NAME %>.<% SCHEMA_NAME %>.DimActionPlanEHS()
     IMPORTS = ('@<% DB_NAME %>.<% SCHEMA_NAME %>.GIT_STORED_PROC_REPO/branches/main/NonPII/SilverRaw_synapse/DimLoader/DimActionPlanEHS.py')
     EXECUTE AS OWNER
     ;
+
+CREATE OR REPLACE PROCEDURE <% DB_NAME %>.<% SCHEMA_NAME %>.DimActionPlanEHS1()
+    RETURNS VARCHAR(16777216)
+    LANGUAGE PYTHON
+    RUNTIME_VERSION = '3.10'
+    PACKAGES = ('snowflake-snowpark-python')
+    HANDLER = 'DimActionPlanEHS1.main'
+    IMPORTS = ('@<% DB_NAME %>.<% SCHEMA_NAME %>.GIT_STORED_PROC_REPO/branches/main/NonPII/SilverRaw_synapse/DimLoader/DimActionPlanEHS1.py')
+    EXECUTE AS OWNER
+    ;
