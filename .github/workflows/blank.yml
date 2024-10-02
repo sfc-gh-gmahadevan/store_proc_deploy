@@ -13,6 +13,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  dev_db: GMAHADEVAN_DB
+  dev_schema: GMAHADEVAN_SCHEMA
+  prod_db: PROD_DB  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -28,12 +32,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-
-      - name: Load environment variables
-        run: |
-          if [ -f .env ]; then
-            export $(grep -v '^#' .env | xargs)
-          fi
 
       - name: Install Python packages
         run: pip install -r requirements.txt
