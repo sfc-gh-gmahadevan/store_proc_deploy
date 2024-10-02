@@ -1,0 +1,24 @@
+definition_version: 1
+snowpark:
+  project_name: "Suncor"
+  stage_name: "gmahadevan_schema.deployment"
+  src: "DimLoader/"
+  procedures:
+    - name: "DimWell"
+      database: "gmahadevan_db"
+      schema: "gmahadevan_schema"
+      handler: "DimWell.main"
+      runtime: "3.10"
+      signature:
+        - name: "start_time"
+          type: "VARCHAR"
+        - name: "end_time"
+          type: "VARCHAR"
+        - name: "addl_param"
+          type: "VARCHAR"
+      returns: number
+    - name: "gmahadevan_db.gmahadevan_schema.DimAppPBI"
+      handler: "DimAppPBI.main"
+      runtime: "3.10"
+      signature: ""
+      returns: string
