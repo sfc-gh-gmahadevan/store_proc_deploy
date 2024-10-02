@@ -14,8 +14,9 @@ on:
   workflow_dispatch:
 
 env:
-  # Setting an environment variable with the value of a configuration variable
-  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+  dev_db: GMAHADEVAN_DB
+  dev_schema: GMAHADEVAN_SCHEMA
+  prod_db: PROD_DB  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -54,10 +55,13 @@ jobs:
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
 
         run: |
-          echo "variable from shell environment : $env_var"
+          echo "dev_db is: $dev_db"
+          echo "dev_schema is: $dev_schema"
           snow --version
-          snow sql -f $GITHUB_WORKSPACE/sql/DimLoader.sql
-          snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
+
+          # option 1
+          snow sql -f $GITHUB_WORKSPACE/sql/DimLoader.sql -D "DB_NAME=$dev_db" -D "SCHEMA_NAME=$dev_schema"
+          snow git fetch GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
           
           # snow sql -q "ALTER GIT REPOSITORY GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO FETCH"
 
