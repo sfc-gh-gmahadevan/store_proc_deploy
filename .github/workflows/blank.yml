@@ -56,7 +56,7 @@ jobs:
         run: |
           echo "variable from shell environment : $env_var"
           snow --version
-          snow sql -f $GITHUB_WORKSPACE/sql/DimLoader.sql -D "DB_NAME=GMAHADEVAN_DB" "SCHEMA_NAME=GMAHADEVAN_DB"
+          snow sql -f $GITHUB_WORKSPACE/sql/DimLoader.sql -D "DB_NAME=GMAHADEVAN_DB" -D "SCHEMA_NAME=GMAHADEVAN_DB"
           snow git fetch  GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
           
           # snow sql -q "ALTER GIT REPOSITORY GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO FETCH"
