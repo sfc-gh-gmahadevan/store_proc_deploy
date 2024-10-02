@@ -38,11 +38,12 @@ jobs:
         run: |
           if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
             echo "prod_db=PROD_DB" >> $GITHUB_ENV
+            echo "prod_schema=PROD_SCHEMA" >> $GITHUB_ENV
             echo "Environment variable prod_db set for main branch."
           else
             echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
             echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
-            echo "Environment variable dev_db, dev_schema set for a different branch."
+            echo "Environment variable dev_db, dev_schema set for a feature branches."
           fi
 
       - name: Install Python packages
