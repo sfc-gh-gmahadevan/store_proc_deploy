@@ -1,3 +1,4 @@
+from helper_class_2 import HelperMethods
 import snowflake.snowpark as snowpark
 from snowflake.snowpark.types import *
 from snowflake.snowpark.functions import *
@@ -9,6 +10,8 @@ from snowflake.snowpark.window import Window
 import datetime,json, re
 
 def main(session, start_time, end_time, addl_param) -> int: 
+
+    return 10
     
     # parameter_dictionary = json.loads(addl_param)
     
@@ -27,12 +30,15 @@ def main(session, start_time, end_time, addl_param) -> int:
     # dim_table_name = parameter_dictionary['DimTableName']
 
     # storage_account = parameter_dictionary['sourceRawFolderPaths']
+
+    # sproc_name = parameter_dictionary['DimLoaderStoredProcedureName']
     
     # process_start_datetime = start_time
     
     # process_end_datetime = end_time
 
     # #Getting remaining pipeline parameters
+    # type_i_columns_string = parameter_dictionary['typeIColumnsList']
     # type_i_columns_list = [element for element in parameter_dictionary['typeIColumnsList'].split(',') if element != '']
     
     
@@ -46,29 +52,28 @@ def main(session, start_time, end_time, addl_param) -> int:
     
     # WellsDF = helper_object._data_read(source_raw_folder_paths, 'VW_UNITSMETRIC_WELLS_V2', 'type_ii_incremental_join_right_side')
     # WellsDF = WellsDF.withColumn("CasingFlangeElevationUOM", lit('meters').cast('string')) \
-    # .withColumn("EWDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("GroundElevationUOM", lit('meters').cast('string')) \
-    # .withColumn("KBToCasingFlangeDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("KBToGroundDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("KBToMudLineDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("KBToOtherDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("KBToTubingDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("MudLineElevationUOM", lit('meters').cast('string')) \
-    # .withColumn("NSDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("OriginalKBElevationUOM", lit('meters').cast('string')) \
-    # .withColumn("OtherElevationLabel", lit(None).cast('string')) \
-    # .withColumn("OtherElevationNote", lit(None).cast('string')) \
-    # .withColumn("OtherElevationToCasinfgFlangeDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("OtherElevationToGroundDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("OtherElevationToMudDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("OtherElevationToTubingDistanceUOM", lit('meters').cast('string')) \
-    # .withColumn("OtherElevationValue", lit(None).cast('decimal(38,15)')) \
-    # .withColumn("TotalDepthUOM", lit('meters').cast('string')) \
-    # .withColumn("TubingHeadElevationUOM", lit('meters').cast('string')) \
-    # .withColumn("UnwrapDisplaceUOMCode", lit('meters').cast('string')) \
-    # .withColumn("WellPadRowID", lit(None).cast('string'))
+    #                 .withColumn("EWDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("GroundElevationUOM", lit('meters').cast('string')) \
+    #                 .withColumn("KBToCasingFlangeDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("KBToGroundDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("KBToMudLineDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("KBToOtherDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("KBToTubingDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("MudLineElevationUOM", lit('meters').cast('string')) \
+    #                 .withColumn("NSDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("OriginalKBElevationUOM", lit('meters').cast('string')) \
+    #                 .withColumn("OtherElevationLabel", lit(None).cast('string')) \
+    #                 .withColumn("OtherElevationNote", lit(None).cast('string')) \
+    #                 .withColumn("OtherElevationToCasinfgFlangeDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("OtherElevationToGroundDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("OtherElevationToMudDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("OtherElevationToTubingDistanceUOM", lit('meters').cast('string')) \
+    #                 .withColumn("OtherElevationValue", lit(None).cast('decimal(38,15)')) \
+    #                 .withColumn("TotalDepthUOM", lit('meters').cast('string')) \
+    #                 .withColumn("TubingHeadElevationUOM", lit('meters').cast('string')) \
+    #                 .withColumn("UnwrapDisplaceUOMCode", lit('meters').cast('string')) \
+    #                 .withColumn("WellPadRowID", lit(None).cast('string'))
    
-    
     # ClmsDtypes = [
     
     
@@ -212,9 +217,8 @@ def main(session, start_time, end_time, addl_param) -> int:
     
     # final_output_df = helper_object._unioning_dataframe_list(df_list)
     
-    # final_output_df.cache()
+    # # final_output_df.cache()
     # updating_records_count = final_output_df.count()
-    updating_records_count = 0
     # print(updating_records_count)
 
     # print("Total rows - {}".format(updating_records_count))
@@ -223,7 +227,8 @@ def main(session, start_time, end_time, addl_param) -> int:
     
     # if(updating_records_count != 0):
     #     final_output_df.write.save_as_table(staging_table, mode=write_out_mode)
-    #     # session.sql("CALL EDW.SP_DIM_DYNAMIC_LOAD(StagingSchemaName => 'EDWSTAGE',StagingTableName => 'DIMWELL',DimSchemaName => 'EDW',DimTableName => 'DIMWELL',BusinesskeyColumns => 'WELLGUID',Type1Columns =>'WellGUID,WellPadRowID,WellPadName,Agent,BusinessUnit,Basin,BasinCode,NumberofCasingStrings,Comments,Country,County,CurrentWellStatus,Directions,UnwrapDisplace,UnwrapDisplaceUOM,District,EnterpriseDivision,AbandonmentDatetimeTZ,RigReleaseDatetimeTZ,SpuddingDatetimeTZ,LicenceDatetime,StatusDatetimeTZ,CasingFlangeElevation,CasingFlangeElevationUOM,GroundElevation,GroundElevationUOM,MudLineElevation,MudLineElevationUOM,OriginalKellyBushingElevation,OriginalKellyBushingElevationUOM,TubingHeadElevation,TubingHeadElevationUOM,EnvironmentSensitiveInd,EWDistance,EWDistanceUOM,EWFlag,FieldName,FieldOffice,GovernmentAuthority,HighH2SInd,HighShutInTubingPressureInd,OtherElevationValue,OtherElevationLabel,OtherElevationNote,KellyBushingToCasingFlangeDistance,KellyBushingToCasingFlangeDistanceUOM,KellyBushingToGroundDistance,KellyBushingToGroundDistanceUOM,KellyBushingToMudLineDistance,KellyBushingToMudLineDistanceUOM,KellyBushingToOtherDistance,KellyBushingToOtherDistanceUOM,KellyBushingToTubingDistance,KellyBushingToTubingDistanceUOM,LastJobSummary,LastJobReportSummary,Latitude,Longitude,LatitudeLongitudeDatum,Lease,LegalSurveyLocation,LegalSurveyType,LocationReference,LocationSensitiveInd,NSDistance,NSDistanceUOM,NSFlag,OperatedInd,WellOperator,OperatorBACode,OtherElevationToCasingFlangeDistance,OtherElevationToCasinfgFlangeDistanceUOM,OtherElevationToGroundDistance,OtherElevationToGroundDistanceUOM,OtherElevationToMudDistance,OtherElevationToMudDistanceUOM,OtherElevationToTubingDistance,OtherElevationToTubingDistanceUOM,Platform,PlugBackTotalDepthSummary,ProblemWellInd,RiskClass,Slot,StateProvince,TotalDepthSummary,TotalDepth,TotalDepthUOM,TotalTVDSummary,UserBoolean1,UserBoolean2,UserBoolean3,UserBoolean4,UserBoolean5,UserDatetime1,UserDatetime2,UserDatetime3,EstimatedHoursPerWell,ProgDepth,UserNum6,SpudNotificationNumber,AbandonmentNotificationNumber,ProjectGroup,CoreType1,CoreType2,UserText6,AccessRoadConditions,WellFileType,UTMGridZone,UTMEasting,UTMNorthing,WaterDepth,NumberOfWellbores,OnshoreOffshoreDesignation,WellSourClass,WellConfiguration,UWI,ProjectName,PreviousWellName,WellShortName,OSE,WellLicencee,WellLicenceNumber,WellType1,WellType2,CurrentWellSubStatus,WellName,SecurityType',MV_ScdType =>'Type1',MV_LoadType =>'Full');").collect()
 
-    # df = session.table(staging_table)
-    return updating_records_count
+    #     sql_proc_call = "CALL "+ sproc_name + "('" + staging_table_schema + "','"+dim_table_name+ "' ,'" + dim_table_schema + "' , '"+ dim_table_name +"','"+ type_i_columns_string + "');"
+
+    
+    # return session.sql(sql_proc_call).collect()[0][0]
