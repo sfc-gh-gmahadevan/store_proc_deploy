@@ -1,10 +1,10 @@
-CREATE OR REPLACE PROCEDURE <% DB_NAME %>.<% SCHEMA_NAME %>.DimWell1()
+CREATE OR REPLACE PROCEDURE <% DB_NAME %>.<% SCHEMA_NAME %>.DimWell1(START_TIME TIMESTAMP_NTZ(9), END_TIME TIMESTAMP_NTZ(9), ADDL_PARAM VARCHAR(16777216))
     RETURNS VARCHAR(16777216)
     LANGUAGE PYTHON
     RUNTIME_VERSION = '3.11'
-    PACKAGES = ('snowflake-snowpark-python', '@GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.SUNCOR_LIB/helper_class_2.zip')
+    PACKAGES = ('snowflake-snowpark-python')
     HANDLER = 'DimWell.main'
-    IMPORTS = ('@<% DB_NAME %>.<% SCHEMA_NAME %>.GIT_STORED_PROC_REPO/branches/feature_1/NonPII/SilverRaw_synapse/DimLoader/DimWell.py')
+    IMPORTS = ('@<% DB_NAME %>.<% SCHEMA_NAME %>.SUNCOR_LIB/helper_class_2.zip', '@<% DB_NAME %>.<% SCHEMA_NAME %>.GIT_STORED_PROC_REPO/branches/feature_1/NonPII/SilverRaw_synapse/DimLoader/DimWell.py')
     EXECUTE AS OWNER
     ;
 

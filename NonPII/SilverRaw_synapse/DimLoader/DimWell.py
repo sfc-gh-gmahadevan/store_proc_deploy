@@ -9,7 +9,7 @@ from snowflake.snowpark.window import Window
 
 import datetime,json, re
 
-def main(session, start_time, end_time, addl_param): 
+def main(session, start_time, end_time, addl_param) -> int: 
 
     return 10
     
