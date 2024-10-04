@@ -10,7 +10,9 @@ if len(sys.argv) != 2:
     exit()
 
 root_directory = sys.argv[1]
-print(f"Deploying all Snowpark apps in root directory {root_directory}")
+db = sys.argv[2]
+schema = sys.argv[3]
+print(f"Deploying all Snowpark apps in root directory {root_directory} for db {db} and schema {schema}")
 
 # Walk the entire directory structure recursively
 for (directory_path, directory_names, file_names) in os.walk(root_directory):
@@ -48,4 +50,5 @@ for (directory_path, directory_names, file_names) in os.walk(root_directory):
     # Make sure all 6 SNOWFLAKE_ environment variables are set
     # SnowCLI accesses the passowrd directly from the SNOWFLAKE_PASSWORD environmnet variable
     os.system(f"snow snowpark build")
-    os.system(f"snow snowpark deploy --replace --account $SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT --user $SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE")
+    os.system(f"snow snowpark deploy --replace --env (DB_NAME={db}) --env (SCHEMA_NAME={schema}) --account $SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT \
+              --user $SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE")

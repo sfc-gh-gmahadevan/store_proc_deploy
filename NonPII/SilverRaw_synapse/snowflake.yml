@@ -6,8 +6,8 @@ snowpark:
   src: "DimLoader/"
   procedures:
     - name: "DimWell"
-      database: "<% ctx.env.database %>"
-      schema: "<% ctx.env.schema %>"
+      database: "<% ctx.env.DB_NAME %>"
+      schema: "<% ctx.env.SCHEMA_NAME %>"
       handler: "DimWell.main"
       runtime: "3.10"
       signature:
@@ -18,12 +18,13 @@ snowpark:
         - name: "addl_param"
           type: "VARCHAR"
       returns: number
-    - name: "<% ctx.env.database %>.<% ctx.env.schema %>.DimAppPBI"
+    - name: "<% ctx.env.DB_NAME %>.<% ctx.env.SCHEMA_NAME %>.DimAppPBI"
       handler: "DimAppPBI.main"
       runtime: "3.10"
       signature: ""
       returns: string
 
+# can provide this as default, pass environment with --env takes precedence
 env:
-  database: "gmahadevan_db"
-  schema: "gmahadevan_schema"
+  DB_NAME: "test_db"
+  SCHEMA_NAME: "test_schema"
