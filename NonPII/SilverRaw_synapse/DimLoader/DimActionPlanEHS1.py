@@ -42,7 +42,7 @@ from functools import reduce
 import json
 
 def main() -> str:
-    return "DimActionPlanEHS1" 
+    return "DimActionPlanEHS1 update" 
 # COMMAND ----------
 
 # DBTITLE 1,Get pipeline parameters into variables
