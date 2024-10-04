@@ -9,9 +9,9 @@ from snowflake.snowpark.window import Window
 
 import datetime,json, re
 
-def main(session, start_time, end_time, addl_param) -> int: 
+def main(session, start_time, end_time, addl_param) -> str: 
 
-    return 10
+    return "10"
     
     # parameter_dictionary = json.loads(addl_param)
     
