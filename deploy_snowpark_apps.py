@@ -5,7 +5,7 @@ import yaml
 ignore_folders = ['.git', '__pycache__', '.ipynb_checkpoints']
 snowflake_project_config_filename = 'snowflake.yml'
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 4:
     print("Root directory is required")
     exit()
 
@@ -50,5 +50,4 @@ for (directory_path, directory_names, file_names) in os.walk(root_directory):
     # Make sure all 6 SNOWFLAKE_ environment variables are set
     # SnowCLI accesses the passowrd directly from the SNOWFLAKE_PASSWORD environmnet variable
     os.system(f"snow snowpark build")
-    os.system(f"snow snowpark deploy --replace --env (DB_NAME={db}) --env (SCHEMA_NAME={schema}) --account $SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT \
-              --user $SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE")
+    os.system(f"snow snowpark deploy --env DB_NAME={db} --env SCHEMA_NAME={schema} --replace")

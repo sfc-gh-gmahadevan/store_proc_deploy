@@ -10,7 +10,7 @@
 
 # COMMAND ----------
 
-def main() -> str:
+def main(addl_param) -> str:
     return "DimAccountingDocumentHeader update" 
 
 # dbutils.widgets.text("pipelineID", "", "pipelineID")
