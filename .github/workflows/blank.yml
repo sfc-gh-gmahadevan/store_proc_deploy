@@ -74,7 +74,10 @@ jobs:
           snow --version
 
           # option 1
+          snow git fetch GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
           snow sql -f $GITHUB_WORKSPACE/sql/DimLoader.sql -D "DB_NAME=$dev_db" -D "SCHEMA_NAME=$dev_schema"
+          
+          # Fetch again to refresh the changes
           snow git fetch GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
           
           # snow sql -q "ALTER GIT REPOSITORY GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO FETCH"
