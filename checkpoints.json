@@ -1,0 +1,18 @@
+{
+  "pipelines": [
+    {
+      "entryPoint": "",
+      "checkpoints": [
+        {
+          "name": "test_transform_dfmode",
+          "df": "transform_df",
+          "file": "sci-dataplatform-axe-etl/axe/axe/process/driver.py",
+          "location": 0,
+          "enabled": true,
+          "mode": 2
+        }
+      ]
+    }
+  ],
+  "type": "Collection"
+}
