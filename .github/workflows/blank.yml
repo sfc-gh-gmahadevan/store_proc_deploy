@@ -28,10 +28,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v4
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Set environment variables based on branch
         id: set-env-vars
@@ -50,7 +50,7 @@ jobs:
       - name: Install Python packages
         run: pip install -r requirements.txt
       
-      - uses: Snowflake-Labs/snowflake-cli-action@v1
+      - uses: Snowflake-Labs/snowflake-cli-action@v1.5
         with:
           cli-version: "latest"
           default-config-file-path: "config.toml"
