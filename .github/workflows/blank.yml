@@ -24,6 +24,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: dev
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:     
@@ -35,19 +36,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Set environment variables based on branch
-        id: set-env-vars
-        run: |
-          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+      # - name: Set environment variables based on branch
+      #   id: set-env-vars
+      #   run: |
+      #     if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
           
-            echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
-            echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
-            echo "Environment variable prod_db set for main branch."
-          else
-            echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
-            echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
-            echo "Environment variable dev_db, dev_schema set for a feature branches."
-          fi
+      #       echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
+      #       echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
+      #       echo "Environment variable prod_db set for main branch."
+      #     else
+      #       echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
+      #       echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
+      #       echo "Environment variable dev_db, dev_schema set for a feature branches."
+      #     fi
 
       - name: Install Python packages
         run: pip install -r requirements.txt
@@ -60,24 +61,25 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         env:
+          
           # PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PASSPHRASE }} 
           # SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
           # SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: GITHUB_ACTIONS
           # SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           # SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
 
-          SNOWFLAKE_ROLE: $SNOWFLAKE_ROLE
+          SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
           SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
 
         run: |
-          echo "dev_db is: $dev_db"
-          echo "dev_schema is: $dev_schema"
-          echo "Snowflake account : $SNOWFLAKE_ACCOUNT"
+          # echo "dev_db is: $dev_db"
+          # echo "dev_schema is: $dev_schema"
+          echo "Snowflake account : ${{ vars.SNOWFLAKE_ACCOUNT }}"
           
-          # snow --version
-          # snow connection test -x -v  --accountname ${{ vars.SNOWFLAKE_ACCOUNT }} --role git_devops --user GIT_CICD --private-key-file ~/Documents/git_user_pvt_key.p8 --authenticator SNOWFLAKE_JWT --database gmahadevan_test --schema gmahadevan_schema
+          snow --version
+          snow connection test -x -v  --accountname $SNOWFLAKE_ACCOUNT --role $SNOWFLAKE_ROLE --user $SNOWFLAKE_USER --private-key-file $ --authenticator SNOWFLAKE_JWT --database gmahadevan_test --schema gmahadevan_schema
           
 
           
