@@ -58,7 +58,8 @@ jobs:
         run: |
           
           snow --version
-          snow connection test -x -v
+          export PRIVATE_KEY_PASSPHRASE=$PRIVATE_KEY_PASSPHRASE
+          snow connection test -x -v --accountname $SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT --user $SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER --private-key-path $SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW
           
 
           
