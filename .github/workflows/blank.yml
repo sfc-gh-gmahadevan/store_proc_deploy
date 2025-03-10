@@ -112,8 +112,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:     
 
-    - name: Checkout code
-      <<: *prep_step
+    - uses: actions/checkout@v4
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v4
@@ -150,13 +149,3 @@ jobs:
         
         snow --version
         snow connection test
-        
-# Defining reusable build and deploy steps using YAML anchors
-defaults:
-  run:
-    shell: bash
-
-# Reusable build step
-prep_step: &prep_step
-  - name: Checkout Code
-    uses: actions/checkout@v4
