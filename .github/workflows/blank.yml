@@ -60,6 +60,8 @@ jobs:
           
           snow --version
           snow connection test
+          snow snowpark build
+        
 
   qa_stage:
     runs-on: ubuntu-latest
@@ -103,6 +105,7 @@ jobs:
           
           snow --version
           snow connection test
+          
   prod_stage:
     runs-on: ubuntu-latest
     needs: qa_stage
