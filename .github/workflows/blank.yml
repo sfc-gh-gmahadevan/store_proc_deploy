@@ -4,27 +4,27 @@ name: DEPLOY_STORED_PROC
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - develop
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# env:
-#   dev_db: GMAHADEVAN_DB
-#   dev_schema: GMAHADEVAN_SCHEMA
-#   prod_db: PROD_DB  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy:
+
+  dev_stage:
     runs-on: ubuntu-latest
+    environment: dev
 
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
+    steps:     
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
@@ -32,20 +32,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Set environment variables based on branch
-        id: set-env-vars
-        run: |
-          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
-          # change the below to prod values. keeping it to dev, to not fail in pr merge to master
-            echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
-            echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
-            echo "Environment variable prod_db set for main branch."
-          else
-            echo "dev_db=GMAHADEVAN_DB" >> $GITHUB_ENV
-            echo "dev_schema=GMAHADEVAN_SCHEMA" >> $GITHUB_ENV
-            echo "Environment variable dev_db, dev_schema set for a feature branches."
-          fi
 
       - name: Install Python packages
         run: pip install -r requirements.txt
@@ -57,33 +43,127 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        env: 
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: SNOWFLAKE_JWT
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: GITHUB_ACTIONS
-          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        env:
+          
+          PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PASSPHRASE }} 
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: ${{ vars.SNOWFLAKE_AUTHENTICATOR }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ vars.SNOWFLAKE_USER }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
 
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+          SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
 
         run: |
-          echo "dev_db is: $dev_db"
-          echo "dev_schema is: $dev_schema"
+          
           snow --version
+          snow connection test
+          pwd
+          ls -lrt
+          cd NonPII/SilverRaw_synapse
+          snow snowpark build
+          snow snowpark deploy --replace --database $SNOWFLAKE_DATABASE --schema $SNOWFLAKE_SCHEMA
+        
 
-          # option 1
-          snow git fetch GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
-          snow sql -f $GITHUB_WORKSPACE/sql/DimLoader.sql -D "DB_NAME=$dev_db" -D "SCHEMA_NAME=$dev_schema"
-          
-          # Fetch again to refresh the changes
-          snow git fetch GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO
-          
-          # snow sql -q "ALTER GIT REPOSITORY GMAHADEVAN_DB.GMAHADEVAN_SCHEMA.GIT_STORED_PROC_REPO FETCH"
+  qa_stage:
+    runs-on: ubuntu-latest
+    needs: dev_stage
+    environment: dev
 
-          # option 2
-          # python deploy_snowpark_apps.py $GITHUB_WORKSPACE $dev_db $dev_schema
-          
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:     
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
 
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+      
+      - uses: Snowflake-Labs/snowflake-cli-action@v1.5
+        with:
+          cli-version: "latest"
+          default-config-file-path: "config.toml"
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        env:
           
+          PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PASSPHRASE }} 
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: ${{ vars.SNOWFLAKE_AUTHENTICATOR }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ vars.SNOWFLAKE_USER }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
+
+          SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
+
+        run: |
+          
+          snow --version
+          snow connection test
+          pwd
+          ls -lrt
+          cd NonPII/SilverRaw_synapse
+          snow snowpark build
+          snow snowpark deploy --replace --database $SNOWFLAKE_DATABASE --schema $SNOWFLAKE_SCHEMA
+
+  prod_stage:
+    runs-on: ubuntu-latest
+    needs: qa_stage
+    environment: dev
+    if: github.ref == 'refs/heads/main'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:     
+
+    - uses: actions/checkout@v4
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v4
+
+    - name: Setup Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Python packages
+      run: pip install -r requirements.txt
+    
+    - uses: Snowflake-Labs/snowflake-cli-action@v1.5
+      with:
+        cli-version: "latest"
+        default-config-file-path: "config.toml"
+
+    # Runs a set of commands using the runners shell
+    - name: Run a multi-line script
+      env:
+        
+        PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PASSPHRASE }} 
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: ${{ vars.SNOWFLAKE_AUTHENTICATOR }}
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ vars.SNOWFLAKE_USER }}
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+        SNOWFLAKE_CONNECTIONS_MYCONNECTION_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_RAW }}
+
+        SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+        SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+        SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+        SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
+
+      run: |
+        
+        snow --version
+        snow connection test
+        pwd
+        ls -lrt
+        cd NonPII/SilverRaw_synapse
+        snow snowpark build
+        snow snowpark deploy --replace
+
