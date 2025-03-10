@@ -60,6 +60,9 @@ jobs:
           
           snow --version
           snow connection test
+          pwd
+          ls -lrt
+          find / -n "snowflake.yml" >2/dev/null
           snow snowpark build
         
 
@@ -151,4 +154,7 @@ jobs:
       run: |
         
         snow --version
+        pwd
+        ls -lrt
         snow connection test
+
