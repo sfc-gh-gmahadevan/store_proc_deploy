@@ -23,5 +23,5 @@ snowpark:
 
 # can provide this as default, pass environment with --env takes precedence
 env:
-  DB_NAME: "gmahadevan_db"
+  DB_NAME: "gmahadevan_test"
   SCHEMA_NAME: "gmahadevan_schema"

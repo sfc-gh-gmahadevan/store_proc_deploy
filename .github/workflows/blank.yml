@@ -64,7 +64,7 @@ jobs:
           ls -lrt
           cd NonPII/SilverRaw_synapse
           snow snowpark build
-          snow snowpark deploy --replace
+          snow snowpark deploy --replace --database $SNOWFLAKE_DATABASE --schema $SNOWFLAKE_SCHEMA
         
 
   qa_stage:
@@ -113,7 +113,7 @@ jobs:
           ls -lrt
           cd NonPII/SilverRaw_synapse
           snow snowpark build
-          snow snowpark deploy --replace
+          snow snowpark deploy --replace --database $SNOWFLAKE_DATABASE --schema $SNOWFLAKE_SCHEMA
 
   prod_stage:
     runs-on: ubuntu-latest
